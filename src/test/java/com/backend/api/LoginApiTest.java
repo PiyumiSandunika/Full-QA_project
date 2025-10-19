@@ -38,6 +38,6 @@ public class LoginApiTest {
                 .then()
                 .statusCode(401)
                 .contentType("text/plain")
-                .body(equalTo("User not found"));
+                .body(equalTo("Invalid credentials"));
     }
 }

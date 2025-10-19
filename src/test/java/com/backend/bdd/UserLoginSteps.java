@@ -20,13 +20,15 @@ public class UserLoginSteps {
 
     @Given("a user exists with email {string} and password {string}")
     public void a_user_exists_with_email_and_password(String email, String password) {
-        // Clear existing users first to avoid conflicts
+        // Clear previous users
         userRepository.deleteAll();
 
-        // Create a unique username for each test run
+        // Create a unique username
         String uniqueUsername = "testUser_" + System.currentTimeMillis();
-        User testUser = new User(uniqueUsername, email, password);
-        userRepository.save(testUser);
+
+        // ✅ Call signup endpoint (encodes password automatically)
+        User signupUser = new User(uniqueUsername, email, password);
+        userController.signup(signupUser);
     }
 
     @When("the user attempts to login with email {string} and password {string}")
@@ -45,7 +47,7 @@ public class UserLoginSteps {
 
     @Then("the login should fail with message {string}")
     public void the_login_should_fail_with_message(String expectedMessage) {
-        assertEquals(401, response.getStatusCodeValue()); // or whatever status code you use for failed login
+        assertEquals(401, response.getStatusCodeValue());
         assertEquals(expectedMessage, response.getBody());
     }
 }
